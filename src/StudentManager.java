@@ -28,10 +28,16 @@ public class StudentManager {
 
     // Xóa sinh viên
     public boolean deleteStudent(String studentId) {
-        return students.removeIf(s -> studentId.equals(s.getStudentId()));
+        for (Student s : students) {
+            if (studentId.equals(s.getStudentId())) {
+                students.remove(s);
+                return true;
+            }
+        }
+        return false;
     }
 
-    // Liệt kê tất cả sinh viên
+    // List all student
     public void listAllStudents() {
         if (students.isEmpty()) {
             System.out.println("Student list is empty");
@@ -48,6 +54,26 @@ public class StudentManager {
                         s.getAverageScore());
             }
         }
+    }
+
+    //display student detail
+    public void displayStudentDetails(String studentId) {
+        Student s = searchStudentByID(studentId);
+        if (s == null) {
+            System.out.println("Student " + studentId + " not found");
+            return;
+        }
+        System.out.println("Student ID found: " + s.getStudentId());
+
+        System.out.printf("%-10s %-20s %-15s %-10s\n", "ID", "Full Name", "Date of Birth", "Score");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        System.out.printf("%-10s %-20s %-15s %-10s\n",
+                    s.getStudentId(),
+                    s.getFullName(),
+                    s.getDateOfBirth().format(formatter),
+                    s.getAverageScore());
     }
 
     public Student searchStudentByID(String studentId) {
