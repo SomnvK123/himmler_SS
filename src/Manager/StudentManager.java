@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 
 
 public class StudentManager {
-    private List<Student> students = new ArrayList<>();
+    private static final List<Student> students = new ArrayList<>();
 
     // Thêm sinh viên
     public void addStudent(Student student) {
