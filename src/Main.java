@@ -57,7 +57,7 @@ public class Main {
     }
 
     private static void showMenu() {
-        System.out.println("\nEntity.Student Management System");
+        System.out.println("\nStudent Management System");
         System.out.println("1. Add Student");
         System.out.println("2. Update Student");
         System.out.println("3. Delete Student");
@@ -101,11 +101,17 @@ public class Main {
         return averageScore;
     }
 
-    private static void checkStudent(String studentId) {
+    private static void checkStudent(String studentId) throws Exception {
         Student existingStudent = students.searchStudentByID(studentId);
         if (existingStudent != null) {
-            System.out.println("Entity.Student with ID " + studentId + " already exists.");
-            return;
+            throw new Exception("Student with ID " + studentId + " already exists.");
+        }
+    }
+
+    private static void checkStudent1(String studentId) throws Exception {
+        Student existingStudent = students.searchStudentByID(studentId);
+        if (existingStudent == null) {
+            throw new Exception("Student with ID " + studentId + " not found.");
         }
     }
 
@@ -123,30 +129,33 @@ public class Main {
             //add student function
             Student student = new Student(studentId, fullName, dateOfBirth, averageScore);
             students.addStudent(student);
-            System.out.println("Entity.Student added successfully!");
+            System.out.println("Student added successfully!");
         } catch (Exception e) {
             System.out.println("Error while adding student: " + e.getMessage());
         }
     }
 
     private static void updateStudent() {
-        //input data
-        String studentId = getInput("Enter student ID: ");
+        try {
+            // input data
+            String studentId = getInput("Enter student ID: ");
+            // check exist
+            checkStudent1(studentId);
 
-        //check studentID exist
-        checkStudent(studentId);
-        // input
-        String fullName = getInput("Enter student full name: ");
-        LocalDate dateOfBirth = inputDateOfBirth();
-        double averageScore = inputAverageScore();
-        // update student
-        Student student = students.updateStudent(studentId, fullName, dateOfBirth, averageScore);
-        if (student != null) {
-            System.out.println("Student updated successfully!");
-            students.displayStudentDetails(student);
+            String fullName = getInput("Enter student full name: ");
+            LocalDate dateOfBirth = inputDateOfBirth();
+            double averageScore = inputAverageScore();
+
+            Student student = students.updateStudent(studentId, fullName, dateOfBirth, averageScore);
+            if (student != null) {
+                System.out.println("Student updated successfully!");
+                students.displayStudentDetails(student);
             } else {
                 System.out.println("Student not found.");
             }
+        } catch (Exception e) {
+            System.out.println("Error while updating student: " + e.getMessage());
+        }
     }
 
     private static void deleteStudent() {
@@ -174,7 +183,6 @@ public class Main {
 
     private static void searchStudentByName() {
         String fullName = getInput("Enter student full name: ");
-
         Student stu = students.searchStudentByFullName(fullName);
         if (stu != null) {
             System.out.println("Student found!");
