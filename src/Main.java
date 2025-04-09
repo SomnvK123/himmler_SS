@@ -70,14 +70,9 @@ public class Main {
         System.out.print("Enter your choice: ");
     }
 
-    private static String inputStudentId() {
-        System.out.print("Enter student ID: ");
-        return  sc.nextLine();
-    }
-
-    private static String inputFullName() {
-        System.out.print("Enter full name: ");
-        return  sc.nextLine();
+    private static String getInput(String prompt) {
+        System.out.print(prompt);
+        return sc.nextLine().trim();
     }
 
     private static LocalDate inputDateOfBirth() {
@@ -106,19 +101,22 @@ public class Main {
         return averageScore;
     }
 
+    private static void checkStudent(String studentId) {
+        Student existingStudent = students.searchStudentByID(studentId);
+        if (existingStudent != null) {
+            System.out.println("Entity.Student with ID " + studentId + " already exists.");
+            return;
+        }
+    }
+
     private static void addStudent() {
         try {
             //input data
-            String studentId = inputStudentId();
-
+            String studentId = getInput("Enter student ID: ");
             //check studentID exist
-            Student existingStudent = students.searchStudentByID(studentId);
-            if (existingStudent != null) {
-                System.out.println("Entity.Student with ID " + studentId + " already exists.");
-                return;
-            }
-
-            String fullName = inputFullName();
+            checkStudent(studentId);
+            // input
+            String fullName = getInput("Enter student full name: ");
             LocalDate dateOfBirth = inputDateOfBirth();
             double averageScore = inputAverageScore();
 
@@ -132,21 +130,16 @@ public class Main {
     }
 
     private static void updateStudent() {
-
         //input data
-        String studentId = inputStudentId();
+        String studentId = getInput("Enter student ID: ");
 
         //check studentID exist
-        Student existingStudent = students.searchStudentByID(studentId);
-        if (existingStudent == null) {
-            System.out.println("Student with ID " + studentId + " not found.");
-            return;
-        }
-
-        String fullName = inputFullName();
+        checkStudent(studentId);
+        // input
+        String fullName = getInput("Enter student full name: ");
         LocalDate dateOfBirth = inputDateOfBirth();
         double averageScore = inputAverageScore();
-
+        // update student
         Student student = students.updateStudent(studentId, fullName, dateOfBirth, averageScore);
         if (student != null) {
             System.out.println("Student updated successfully!");
@@ -157,7 +150,7 @@ public class Main {
     }
 
     private static void deleteStudent() {
-        String studentId = inputStudentId();
+        String studentId = getInput("Enter student ID: ");
         if (students.deleteStudent(studentId)) {
             System.out.println("Student deleted successfully!");
             students.listAllStudents();
@@ -167,7 +160,7 @@ public class Main {
     }
 
     private static void searchStudentByID() {
-        String studentId = inputStudentId();
+        String studentId = getInput("Enter student ID: ");
         Student student = students.searchStudentByID(studentId);
         // Tìm kiếm sinh viên theo ID
         if (student != null) {
@@ -180,7 +173,7 @@ public class Main {
     }
 
     private static void searchStudentByName() {
-        String fullName = inputFullName();
+        String fullName = getInput("Enter student full name: ");
 
         Student stu = students.searchStudentByFullName(fullName);
         if (stu != null) {
@@ -191,15 +184,20 @@ public class Main {
         }
     }
 
+    private static void displaySortMenu() {
+        System.out.println("1. Ascending");
+        System.out.println("2. Descending");
+        System.out.println("0. Exit");
+        System.out.print("Your choice: ");
+    }
+
+
     private static void sortStudentByAverageScore() {
         Scanner sc = new Scanner(System.in);
 
         while (true) {
             System.out.println("\n=== Sort by Average Score ===");
-            System.out.println("1. Ascending");
-            System.out.println("2. Descending");
-            System.out.println("0. Exit");
-            System.out.print("Your choice: ");
+            displaySortMenu();
 
             int choiceAve;
             try {
@@ -234,10 +232,7 @@ public class Main {
 
         while (true) {
             System.out.println("\n=== Sort by Name ===");
-            System.out.println("1. Ascending");
-            System.out.println("2. Descending");
-            System.out.println("0. Exit");
-            System.out.print("Your choice: ");
+            displaySortMenu();
             int choiceName;
             try {
                 choiceName = Integer.parseInt(sc.nextLine());
