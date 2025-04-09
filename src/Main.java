@@ -67,12 +67,46 @@ public class Main {
         System.out.print("Enter your choice: ");
     }
 
+    private static String inputStudentId() {
+        System.out.print("Enter student ID: ");
+        return  sc.nextLine();
+    }
+
+    private static String inputFullName() {
+        System.out.print("Enter full name: ");
+        return  sc.nextLine();
+    }
+
+    private static LocalDate inputDateOfBirth() {
+        System.out.print("Enter date of birth (dd-MM-yyyy): ");
+        String dobString = sc.nextLine();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return LocalDate.parse(dobString, formatter);
+    }
+
+    private static double inputAverageScore() {
+        //check average score >= 0 || <= 10
+        double averageScore;
+        while (true) {
+            System.out.print("Enter average score: ");
+            try {
+                averageScore = Double.parseDouble(sc.nextLine());
+                if (averageScore < 0 || averageScore > 10) {
+                    System.out.println("Average score must be >= 0 || <= 10. Please try again.");
+                    continue;
+                }
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a valid number.");
+            }
+        }
+        return averageScore;
+    }
+
     private static void addStudent() {
         try {
-
             //input data
-            System.out.print("Enter student ID: ");
-            String studentId = sc.nextLine();
+            String studentId = inputStudentId();
 
             //check studentID exist
             Student existingStudent = students.searchStudentByID(studentId);
@@ -81,29 +115,9 @@ public class Main {
                 return;
             }
 
-            System.out.print("Enter full name: ");
-            String fullName = sc.nextLine();
-
-            System.out.print("Enter date of birth (dd-MM-yyyy): ");
-            String dobString = sc.nextLine();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            LocalDate dateOfBirth = LocalDate.parse(dobString, formatter);
-
-            //check average score >= 0
-            double averageScore;
-            while (true) {
-                System.out.print("Enter average score: ");
-                try {
-                    averageScore = Double.parseDouble(sc.nextLine());
-                    if (averageScore < 0) {
-                        System.out.println("Average score must be >= 0. Please try again.");
-                        continue;
-                    }
-                    break;
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid input! Please enter a valid number.");
-                }
-            }
+            String fullName = inputFullName();
+            LocalDate dateOfBirth = inputDateOfBirth();
+            double averageScore = inputAverageScore();
 
             //add student function
             Student student = new Student(studentId, fullName, dateOfBirth, averageScore);
@@ -114,12 +128,10 @@ public class Main {
         }
     }
 
-
     private static void updateStudent() {
 
         //input data
-        System.out.print("Enter student ID to update: ");
-        String studentId = sc.nextLine();
+        String studentId = inputStudentId();
 
         //check studentID exist
         Student existingStudent = students.searchStudentByID(studentId);
@@ -128,45 +140,21 @@ public class Main {
             return;
         }
 
-        System.out.print("Enter new full name: ");
-        String fullName = sc.nextLine();
+        String fullName = inputFullName();
+        LocalDate dateOfBirth = inputDateOfBirth();
+        double averageScore = inputAverageScore();
 
-        System.out.print("Enter new date of birth (dd-MM-yyyy): ");
-        String dobString = sc.nextLine();
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            LocalDate dateOfBirth = LocalDate.parse(dobString, formatter);
-
-            //check input average score >= 0
-            double averageScore;
-            while (true) {
-                System.out.print("Enter new average score: ");
-                try {
-                    averageScore = Double.parseDouble(sc.nextLine());
-                    if (averageScore < 0) {
-                        System.out.println("Average score must be >= 0. Please try again.");
-                        continue;
-                    }
-                    break;
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid input! Please enter a valid number.");
-                }
-            }
-
-            if (students.updateStudent(studentId, fullName, dateOfBirth, averageScore)) {
-                System.out.println("Student updated successfully!");
-                students.displayStudentDetails(studentId);
+        Student student = students.updateStudent(studentId, fullName, dateOfBirth, averageScore);
+        if (student != null) {
+            System.out.println("Student updated successfully!");
+            students.displayStudentDetails(student);
             } else {
                 System.out.println("Student not found.");
             }
-        } catch (Exception e) {
-            System.out.println("Error while updating student: " + e.getMessage());
-        }
     }
 
     private static void deleteStudent() {
-        System.out.print("Enter student ID to delete: ");
-        String studentId = sc.nextLine();
+        String studentId = inputStudentId();
         if (students.deleteStudent(studentId)) {
             System.out.println("Student deleted successfully!");
             students.listAllStudents();
@@ -176,34 +164,25 @@ public class Main {
     }
 
     private static void searchStudentByID() {
-        System.out.print("Enter student ID to search: ");
-        String studentId = sc.nextLine();
-
+        String studentId = inputStudentId();
         Student student = students.searchStudentByID(studentId);
         // Tìm kiếm sinh viên theo ID
         if (student != null) {
             System.out.println("Student found!");
             // In ra thông tin sinh viên
-            System.out.println("Student ID: " + student.getStudentId());
-            System.out.println("Full Name: " + student.getFullName());
-            System.out.println("Date of Birth: " + student.getDateOfBirth().toString());
-            System.out.println("Average Score: " + student.getAverageScore());
+            students.displayStudentDetails(student);
         } else {
             System.out.println("Student not found.");
         }
     }
 
     private static void searchStudentByName() {
-        System.out.print("Enter fullname of student to search: ");
-        String fullName = sc.nextLine();
+        String fullName = inputFullName();
 
         Student stu = students.searchStudentByFullName(fullName);
         if (stu != null) {
             System.out.println("Student found!");
-            System.out.println("Student ID: " + stu.getStudentId());
-            System.out.println("Full Name: " + stu.getFullName());
-            System.out.println("Date of Birth: " + stu.getDateOfBirth().toString());
-            System.out.println("Average Score: " + stu.getAverageScore());
+            students.displayStudentDetails(stu);
         } else {
             System.out.println("Student not found.");
         }
@@ -229,13 +208,13 @@ public class Main {
 
             switch (choiceAve) {
                 case 1: {
-                    students.sortStudentByAverageScore(true); // Tăng dần
+                    students.sortStudentByAverageScore(true);
                     System.out.println("Sorted by average score (ascending):");
                     students.listAllStudents();
                     break;
                 }
                 case 2: {
-                    students.sortStudentByAverageScore(false); // Giảm dần
+                    students.sortStudentByAverageScore(false);
                     System.out.println("Sorted by average score (descending):");
                     students.listAllStudents();
                     break;

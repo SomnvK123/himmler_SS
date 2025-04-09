@@ -14,16 +14,16 @@ public class StudentManager {
     }
 
     // Cập nhật thông tin sinh viên
-    public boolean updateStudent(String studentId, String fullName, LocalDate dateOfBirth, double averageScore) {
+    public Student updateStudent(String studentId, String fullName, LocalDate dateOfBirth, double averageScore) {
         for (Student s : students) {
             if (studentId.equals(s.getStudentId())) {
                 s.setFullName(fullName);
                 s.setDateOfBirth(dateOfBirth);
                 s.setAverageScore(averageScore);
-                return true;
+                return s;
             }
         }
-        return false;
+        return null;
     }
 
     // Xóa sinh viên
@@ -57,10 +57,9 @@ public class StudentManager {
     }
 
     //display student detail
-    public void displayStudentDetails(String studentId) {
-        Student s = searchStudentByID(studentId);
+    public void displayStudentDetails(Student s) {
         if (s == null) {
-            System.out.println("Student " + studentId + " not found");
+            System.out.println("Student " + s + " not found");
             return;
         }
         System.out.println("Student ID found: " + s.getStudentId());
