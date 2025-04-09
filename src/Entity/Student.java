@@ -1,5 +1,6 @@
+package Entity;
+
 import java.time.LocalDate;
-import java.util.Date;
 
 public class Student {
     private String studentId;

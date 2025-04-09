@@ -1,3 +1,6 @@
+import Entity.Student;
+import Manager.StudentManager;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -54,7 +57,7 @@ public class Main {
     }
 
     private static void showMenu() {
-        System.out.println("\nStudent Management System");
+        System.out.println("\nEntity.Student Management System");
         System.out.println("1. Add Student");
         System.out.println("2. Update Student");
         System.out.println("3. Delete Student");
@@ -111,7 +114,7 @@ public class Main {
             //check studentID exist
             Student existingStudent = students.searchStudentByID(studentId);
             if (existingStudent != null) {
-                System.out.println("Student with ID " + studentId + " already exists.");
+                System.out.println("Entity.Student with ID " + studentId + " already exists.");
                 return;
             }
 
@@ -122,7 +125,7 @@ public class Main {
             //add student function
             Student student = new Student(studentId, fullName, dateOfBirth, averageScore);
             students.addStudent(student);
-            System.out.println("Student added successfully!");
+            System.out.println("Entity.Student added successfully!");
         } catch (Exception e) {
             System.out.println("Error while adding student: " + e.getMessage());
         }
