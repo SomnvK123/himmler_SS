@@ -44,7 +44,7 @@ public class StudentManager {
     // List all student
     public void listAllStudents() {
         if (students.isEmpty()) {
-            System.out.println("Entity.Student list is empty");
+            System.out.println("Student list is empty");
         } else {
             System.out.printf("%-10s %-20s %-15s %-10s\n", "ID", "Full Name", "Date of Birth", "Score");
 
@@ -63,10 +63,10 @@ public class StudentManager {
     //display student detail
     public void displayStudentDetails(Student s) {
         if (s == null) {
-            System.out.println("Entity.Student " + s + " not found");
+            System.out.println("Student " + s + " not found");
             return;
         }
-        System.out.println("Entity.Student ID found: " + s.getStudentId());
+        System.out.println("Student ID found: " + s.getStudentId());
 
         System.out.printf("%-10s %-20s %-15s %-10s\n", "ID", "Full Name", "Date of Birth", "Score");
 
